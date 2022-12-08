@@ -1,0 +1,132 @@
+[
+    {
+        "id": "b1ce1075514290cf",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "13ca3ec804312414",
+        "type": "http in",
+        "z": "b1ce1075514290cf",
+        "name": "HTTP-IN",
+        "url": "/update-arduino",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 520,
+        "y": 260,
+        "wires": [
+            [
+                "4fd9ab93372f2106",
+                "c25bb546ae41fc64",
+                "ade2212185cd681f"
+            ]
+        ]
+    },
+    {
+        "id": "4fd9ab93372f2106",
+        "type": "http request",
+        "z": "b1ce1075514290cf",
+        "name": "FLASK-POST",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://127.0.0.1:5000/leituras-arduino",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 740,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c25bb546ae41fc64",
+        "type": "http response",
+        "z": "b1ce1075514290cf",
+        "name": "OK",
+        "statusCode": "",
+        "headers": {},
+        "x": 710,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "2f72db24ed0956df",
+        "type": "mqtt out",
+        "z": "b1ce1075514290cf",
+        "name": "MQTT",
+        "topic": "v1/devices/me/telemetry",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "254619fdb1fa82bb",
+        "x": 870,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "ade2212185cd681f",
+        "type": "delay",
+        "z": "b1ce1075514290cf",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "250",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 710,
+        "y": 260,
+        "wires": [
+            [
+                "2f72db24ed0956df"
+            ]
+        ]
+    },
+    {
+        "id": "254619fdb1fa82bb",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "2",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]

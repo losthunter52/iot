@@ -1,0 +1,132 @@
+[
+    {
+        "id": "0c207295355b1601",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "56a72d60275c1cb3",
+        "type": "http in",
+        "z": "0c207295355b1601",
+        "name": "HTTP-IN",
+        "url": "/update-esp8266",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 420,
+        "y": 260,
+        "wires": [
+            [
+                "27ccbf35cabf62f4",
+                "ea73c119610cf170",
+                "421937449ba50507"
+            ]
+        ]
+    },
+    {
+        "id": "27ccbf35cabf62f4",
+        "type": "http request",
+        "z": "0c207295355b1601",
+        "name": "FLASK-POST",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://127.0.0.1:5000/leituras-esp8266",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 640,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a028a66cea664bfb",
+        "type": "mqtt out",
+        "z": "0c207295355b1601",
+        "name": "MQTT",
+        "topic": "v1/devices/me/telemetry",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "254619fdb1fa82bb",
+        "x": 770,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "ea73c119610cf170",
+        "type": "http response",
+        "z": "0c207295355b1601",
+        "name": "OK",
+        "statusCode": "",
+        "headers": {},
+        "x": 610,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "421937449ba50507",
+        "type": "delay",
+        "z": "0c207295355b1601",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "250",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 610,
+        "y": 260,
+        "wires": [
+            [
+                "a028a66cea664bfb"
+            ]
+        ]
+    },
+    {
+        "id": "254619fdb1fa82bb",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "2",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]

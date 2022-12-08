@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Messenger App</title>
+  <meta charset="utf-8">
+  <style>
+      .sidebar2 {
+        margin: 0;
+        padding: 0;
+        width: 20%;
+        background-color: #f1f1f1;
+        position: fixed;
+        height: 100%;
+        overflow: auto;
+      }
+
+      .sidebar {
+        margin-left: 80%;
+        width: 20%;
+        background-color: #f1f1f1;
+        position: fixed;
+        height: 100%;
+        overflow: auto;
+      }
+
+      .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 200px;
+      }
+
+      .sidebar2 a {
+        display: block;
+        color: black;
+        padding: 16px;
+        text-decoration: none;
+      }
+
+
+      .sidebar2 a:hover:not(.active) {
+        background-color: #555;
+        color: white;
+      }
+
+      .sidebar a {
+        display: block;
+        color: black;
+        padding: 16px;
+        text-decoration: none;
+      }
+
+
+      .sidebar a:hover:not(.active) {
+        background-color: #555;
+        color: white;
+      }
+
+      div.content {
+        margin-left: 200px;
+        padding: 1px 16px;
+        height: 1000px;
+      }
+
+      @media screen and (max-width: 700px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+        }
+        .sidebar a {float: left;}
+        div.content {margin-left: 0;}
+      }
+
+      @media screen and (max-width: 400px) {
+        .sidebar a {
+          text-align: center;
+          float: none;
+        }
+      }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+  <div class="sidebar">
+    <p align="center"><h2>ESP8266</h2></p>
+    <p align="center"><input type="date" id="filter-esp8266" name="filter"></p>
+    <div id="index-esp8266"></div>
+    <p align="center"><h2>ARDUINO</h2></p>
+    <p align="center"><input type="date" id="filter-arduino" name="filter"></p>
+    <div id="index-arduino"></div>
+  </div>
+
+  <div class="sidebar2">
+    <p align="center"><h2>ESP8266</h2></p>
+    <div id="esp8266"></div>
+    <br>
+    <p align="center"><h2>ARDUINO</h2></p>
+    <div id="arduino"></div>
+  </div>
+  
+  <div class="content">
+    <div class="center" id="details">
+    </div>
+  </div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+  <script>
+  $(document).ready(function () {
+    setInterval(function () {
+      var data = document.getElementById("filter-esp8266");
+    	if(data.value == ''){
+    		$.ajax({
+          type: 'GET',
+          url: "http://127.0.0.1:5000/leituras-esp8266",
+          success: function (response) {
+            $("#index-esp8266").empty();
+            $("#esp8266").empty();
+            var det = "<h2> Luminosidade: ";
+            det += response.esp8266[0].luminosidade;
+            det += "</h2>";
+            $("#esp8266").append(det);
+            for (var i in response.esp8266) {
+              var temp = "<a href='#' onClick='detail_esp8266("
+              temp += response.esp8266[i].id;
+              temp += ",";
+              temp += response.esp8266[i].luminosidade;
+              temp += ")'>";
+              temp += response.esp8266[i].id;
+              temp += " - ";
+              temp += response.esp8266[i].leitura_data;
+              temp += "</a>"
+              $("#index-esp8266").append(temp);
+            }
+          },
+          error: function (response) {
+            alert('An error occured')
+          }
+        });
+    	} else {
+        $.ajax({
+          type: 'POST',
+          url: "http://127.0.0.1:5000/leituras-esp8266/data",
+          data: JSON.stringify({
+          "data": data.value,
+          }),
+          dataType: "json",
+          error: function(e) {
+          console.log(e);
+          },
+          contentType: "application/json",
+          success: function (response) {
+            $("#index-esp8266").empty();
+            $("#esp8266").empty();
+            var det = "<h2> Luminosidade: ";
+            det += response.esp8266[0].luminosidade;
+            det += "</h2>";
+            $("#esp8266").append(det);
+            for (var i in response.esp8266) {
+              var temp = "<a href='#' onClick='detail_esp8266("
+              temp += response.esp8266[i].id;
+              temp += ",";
+              temp += response.esp8266[i].luminosidade;
+              temp += ")'>";
+              temp += response.esp8266[i].id;
+              temp += " - ";
+              temp += response.esp8266[i].leitura_data;
+              temp += "</a>"
+              $("#index-esp8266").append(temp);
+            }
+          },
+          error: function (response) {
+            alert('An error occured')
+          }
+        });
+      }
+    }, 1000);
+  })
+</script>
+<script>
+  $(document).ready(function () {
+    setInterval(function () {
+      var data = document.getElementById("filter-arduino");
+    	if(data.value == ''){
+    		$.ajax({
+          type: 'GET',
+          url: "http://127.0.0.1:5000/leituras-arduino",
+          success: function (response) {
+            $("#index-arduino").empty();
+            $("#arduino").empty();
+            var det = "<h2> Temperatura: ";
+            det += response.arduino[0].temperatura;
+            det += "<br> Umidade:";
+            det += response.arduino[0].umidade;
+            det += "</h2>";
+            $("#arduino").append(det);
+            for (var i in response.arduino) {
+              var temp = "<a href='#' onClick='detail_arduino("
+              temp += response.arduino[i].id;
+              temp += ",";
+              temp += response.arduino[i].temperatura;
+              temp += ",";
+              temp += response.arduino[i].umidade;
+              temp += ")'>";
+              temp += response.arduino[i].id;
+              temp += " - ";
+              temp += response.arduino[i].leitura_data;
+              temp += "</a>"
+              $("#index-arduino").append(temp);
+            }
+          },
+          error: function (response) {
+            alert('An error occured')
+          }
+        });
+    	} else {
+        $.ajax({
+          type: 'POST',
+          url: "http://127.0.0.1:5000/leituras-arduino/data",
+          data: JSON.stringify({
+          "data": data.value,
+          }),
+          dataType: "json",
+          error: function(e) {
+          console.log(e);
+          },
+          contentType: "application/json",
+          success: function (response) {
+            $("#index-arduino").empty();
+            $("#arduino").empty();
+            var det = "<h2> Temperatura: ";
+            det += response.arduino[0].temperatura;
+            det += "<br> Umidade:";
+            det += response.arduino[0].umidade;
+            det += "</h2>";
+            $("#arduino").append(det);
+            for (var i in response.arduino) {
+              var temp = "<a href='#' onClick='detail_arduino("
+              temp += response.arduino[i].id;
+              temp += ",";
+              temp += response.arduino[i].temperatura;
+              temp += ",";
+              temp += response.arduino[i].umidade;
+              temp += ")'>";
+              temp += response.arduino[i].id;
+              temp += " - ";
+              temp += response.arduino[i].leitura_data;
+              temp += "</a>"
+              $("#index-arduino").append(temp);
+            }
+          },
+          error: function (response) {
+            alert('An error occured')
+          }
+        });
+      }
+    }, 1000);
+  })
+</script>
+<script>
+  function detail_esp8266(id, luminosidade) {
+    $("#details").empty();
+    var temp = "<h2> ESP8266 ";
+    temp += "<br> ID: ";
+    temp += id;
+    temp += "<br> Luminosidade: ";
+    temp += luminosidade;
+    temp += "</h2>";
+    $("#details").append(temp);
+  }
+</script>
+<script>
+  function detail_arduino(id, temperatura, umidade) {
+    $("#details").empty();
+    var temp = "<h2> ARDUINO ";
+    temp += "<br> ID: ";
+    temp += id;
+    temp += "<br> Temperatura: ";
+    temp += temperatura;
+    temp += "<br> Umidade: ";
+    temp += umidade;
+    temp += "</h2>";
+    $("#details").append(temp);
+  }
+</script>
+</html>
